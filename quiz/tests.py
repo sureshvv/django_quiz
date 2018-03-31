@@ -964,18 +964,19 @@ class TestTemplateTags(TestCase):
 
         context = Context({'question': self.question1})
 
-        self.assertTemplateUsed('correct_answer.html')
+        self.assertTemplateUsed('quiz/correct_answer.html')
         self.assertIn('bing', template.render(context))
         self.assertNotIn('incorrectly', template.render(context))
 
     def test_correct_answer_all_user(self):
+        import pdb; pdb.set_trace()
         template = Template('{% load quiz_tags %}' +
                             '{% correct_answer_for_all question %}')
 
         context = Context({'question': self.question1,
                            'incorrect_questions': [1]})
 
-        self.assertTemplateUsed('correct_answer.html')
+        self.assertTemplateUsed('quiz/correct_answer.html')
         self.assertIn('bing', template.render(context))
         self.assertIn('incorrectly', template.render(context))
 
