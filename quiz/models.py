@@ -196,7 +196,8 @@ class Progress(models.Model):
     Data stored in csv using the format:
         category, score, possible, category, score, possible, ...
     """
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=_("User"))
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                verbose_name=_("User"))
 
     score = models.CommaSeparatedIntegerField(max_length=1024,
                                               verbose_name=_("Score"))

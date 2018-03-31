@@ -1,5 +1,6 @@
 import random
-import datetime
+from datetime import datetime
+import time
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
@@ -179,13 +180,18 @@ class QuizTake(FormView):
             if self.sitting.get_first_question() is False:
                 return self.final_result_user()
             if self.quiz.time_limit > 0:
-                elapsed = datetime.datetime.now() - self.sitting.start
+                elapsed = datetime.now() - self.sitting.start
                 if elapsed.total_seconds() > self.quiz.time_limit*60:
                     return self.final_result_user()
         else:
             self.form_valid_anon(form)
             if not self.request.session[self.quiz.anon_q_list()]:
                 return self.final_result_anon()
+            if self.quiz.time_limit > 0:
+                elapsed = datetime.now() - datetime.fromtimestamp(
+                    self.request.session['start'])
+                if elapsed.total_seconds() > self.quiz.time_limit*60:
+                    return self.final_result_user()
 
         self.request.POST = {}
 
@@ -200,7 +206,11 @@ class QuizTake(FormView):
         if hasattr(self, 'progress'):
             context['progress'] = self.progress
         if self.quiz.time_limit > 0:
-            elapsed = datetime.datetime.now() - self.sitting.start
+            if self.logged_in_user:
+                elapsed = datetime.now() - self.sitting.start
+            else:
+                elapsed = datetime.now() - datetime.fromtimestamp(
+                    self.request.session['start'])
             elapsed = int(elapsed.total_seconds()) // 60
             context['time_left'] = self.quiz.time_limit - elapsed
         return context
@@ -231,7 +241,7 @@ class QuizTake(FormView):
         self.sitting.remove_first_question()
 
     def final_result_user(self):
-        elapsed = datetime.datetime.now() - self.sitting.start
+        elapsed = datetime.now() - self.sitting.start
         elapsed = int(elapsed.total_seconds()) // 60
 
         results = {
@@ -294,6 +304,7 @@ class QuizTake(FormView):
             order=question_list,
         )
 
+        self.request.session['start'] = time.time()
         return self.request.session[self.quiz.anon_q_list()]
 
     def anon_next_question(self):
@@ -338,13 +349,17 @@ class QuizTake(FormView):
         session, session_possible = anon_session_score(self.request.session)
         if score is 0:
             score = "0"
+        elapsed = datetime.now() - datetime.fromtimestamp(
+            self.request.session['start'])
+        elapsed = int(elapsed.total_seconds()) // 60
 
         results = {
             'score': score,
             'max_score': max_score,
             'percent': percent,
             'session': session,
-            'possible': session_possible
+            'possible': session_possible,
+            'elapsed': elapsed,
         }
 
         del self.request.session[self.quiz.anon_q_list()]
