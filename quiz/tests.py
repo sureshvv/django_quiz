@@ -571,7 +571,8 @@ class TestQuestionViewsAnon(TestCase):
         self.question1.quiz.add(self.quiz1)
 
         self.question2 = MCQuestion.objects.create(id=2,
-                                                   content='squeek')
+                                                   content='squeek',
+                                                   explanation='explaub squeek')
         self.question2.quiz.add(self.quiz1)
 
         self.answer1 = Answer.objects.create(id=123,
