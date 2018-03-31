@@ -188,10 +188,9 @@ class QuizTake(FormView):
             if not self.request.session[self.quiz.anon_q_list()]:
                 return self.final_result_anon()
             if self.quiz.time_limit > 0:
-                elapsed = datetime.now() - datetime.fromtimestamp(
-                    self.request.session['start'])
-                if elapsed.total_seconds() > self.quiz.time_limit*60:
-                    return self.final_result_user()
+                elapsed = time.time() - self.request.session['start']
+                if elapsed > self.quiz.time_limit*60:
+                    return self.final_result_anon()
 
         self.request.POST = {}
 
@@ -208,10 +207,10 @@ class QuizTake(FormView):
         if self.quiz.time_limit > 0:
             if self.logged_in_user:
                 elapsed = datetime.now() - self.sitting.start
+                elapsed = int(elapsed.total_seconds() / 60)
             else:
-                elapsed = datetime.now() - datetime.fromtimestamp(
-                    self.request.session['start'])
-            elapsed = int(elapsed.total_seconds()) // 60
+                elapsed = time.time() - self.request.session['start']
+                elapsed /= 60
             context['time_left'] = self.quiz.time_limit - elapsed
         return context
 
@@ -242,7 +241,7 @@ class QuizTake(FormView):
 
     def final_result_user(self):
         elapsed = datetime.now() - self.sitting.start
-        elapsed = int(elapsed.total_seconds()) // 60
+        elapsed = int(elapsed.total_seconds() / 60)
 
         results = {
             'quiz': self.quiz,
@@ -349,9 +348,8 @@ class QuizTake(FormView):
         session, session_possible = anon_session_score(self.request.session)
         if score is 0:
             score = "0"
-        elapsed = datetime.now() - datetime.fromtimestamp(
-            self.request.session['start'])
-        elapsed = int(elapsed.total_seconds()) // 60
+        elapsed = time.time() - self.request.session['start']
+        elapsed /= 60
 
         results = {
             'score': score,
