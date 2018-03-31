@@ -969,7 +969,6 @@ class TestTemplateTags(TestCase):
         self.assertNotIn('incorrectly', template.render(context))
 
     def test_correct_answer_all_user(self):
-        import pdb; pdb.set_trace()
         template = Template('{% load quiz_tags %}' +
                             '{% correct_answer_for_all question %}')
 

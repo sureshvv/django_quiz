@@ -202,7 +202,7 @@ class QuizTake(FormView):
         if self.quiz.time_limit > 0:
             elapsed = datetime.datetime.now() - self.sitting.start
             elapsed = int(elapsed.total_seconds()) // 60
-            context['time_left'] = quiz.time_limit - elapsed
+            context['time_left'] = self.quiz.time_limit - elapsed
         return context
 
     def form_valid_user(self, form):
