@@ -141,6 +141,10 @@ class Quiz(models.Model):
         help_text=_("In minutes."),
         validators=[MaxValueValidator(600)])
 
+    score = models.CommaSeparatedIntegerField(max_length=1024,
+                                              blank=True, default='1,0',
+                                              verbose_name=_("Score"))
+
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         self.url = re.sub('\s+', '-', self.url).lower()
 

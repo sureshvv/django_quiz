@@ -218,13 +218,15 @@ class QuizTake(FormView):
         progress, c = Progress.objects.get_or_create(user=self.request.user)
         guess = form.cleaned_data['answers']
         is_correct = self.question.check_if_correct(guess)
+        scoring = list(map(int, self.quiz.score.split(',')))
 
         if is_correct is True:
-            self.sitting.add_to_score(1)
-            progress.update_score(self.question, 1, 1)
+            self.sitting.add_to_score(scoring[0])
+            progress.update_score(self.question, scoring[0], scoring[0])
         else:
+            self.sitting.add_to_score(-scoring[1])
             self.sitting.add_incorrect_question(self.question)
-            progress.update_score(self.question, 0, 1)
+            progress.update_score(self.question, -scoring[1], scoring[0])
 
         if self.quiz.answers_at_end is not True:
             self.previous = {'previous_answer': guess,
@@ -318,12 +320,14 @@ class QuizTake(FormView):
     def form_valid_anon(self, form):
         guess = form.cleaned_data['answers']
         is_correct = self.question.check_if_correct(guess)
+        scoring = list(map(int, self.quiz.score.split(',')))
 
         if is_correct:
-            self.request.session[self.quiz.anon_score_id()] += 1
-            anon_session_score(self.request.session, 1, 1)
+            self.request.session[self.quiz.anon_score_id()] += scoring[0]
+            anon_session_score(self.request.session, scoring[0], scoring[0])
         else:
-            anon_session_score(self.request.session, 0, 1)
+            self.request.session[self.quiz.anon_score_id()] -= scoring[1]
+            anon_session_score(self.request.session, -scoring[1], scoring[0])
             self.request\
                 .session[self.quiz.anon_q_data()]['incorrect_questions']\
                 .append(self.question.id)
@@ -343,7 +347,8 @@ class QuizTake(FormView):
     def final_result_anon(self):
         score = self.request.session[self.quiz.anon_score_id()]
         q_order = self.request.session[self.quiz.anon_q_data()]['order']
-        max_score = len(q_order)
+        scoring = list(map(int, self.quiz.score.split(',')))
+        max_score = len(q_order) * scoring[0]
         percent = int(round((float(score) / max_score) * 100))
         session, session_possible = anon_session_score(self.request.session)
         if score is 0:
