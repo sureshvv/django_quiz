@@ -9,7 +9,7 @@
 {% block content %}
  
   {% if quiz.time_limit > 0 and elapsed >= quiz.time_limit %}
-    <div class="alert alert-error">
+    <div class="alert alert-danger">
       Exceeded maximum allowed {{ quiz.time_limit }} minutes.
     </div>
   {% endif %}

@@ -42,7 +42,7 @@
 
 {% if question %}
 {% if quiz.time_limit and time_left <= 0 %}
-    <div class="alert alert-error">
+    <div class="alert alert-danger">
       Time limit of {{ quiz.time_limit }} minutes exceeded!
     </div>
 {% endif %} 

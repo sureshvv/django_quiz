@@ -154,6 +154,17 @@ class QuizTake(FormView):
         if self.sitting is False:
             return render(request, 'quiz/single_complete.html')
 
+        if self.quiz.time_limit > 0:
+            if self.logged_in_user:
+                elapsed = (datetime.now() - self.sitting.start).total_seconds()
+                if elapsed > self.quiz.time_limit*60:
+                    self.previous = {}
+                    return self.final_result_user()
+            else:
+                elapsed = time.time() - self.request.session['start']
+                if elapsed > self.quiz.time_limit*60:
+                    self.previous = {}
+                    return self.final_result_anon()
         return super(QuizTake, self).dispatch(request, *args, **kwargs)
 
     def get_form(self, form_class):
