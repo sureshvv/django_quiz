@@ -10,6 +10,9 @@
 {% if quiz.single_attempt %}
   <h4>{% trans "You will only get one attempt at this quiz" %}.</h4>
 {% endif %}
+{% if quiz.time_limit > 0 %}
+  <h4>{% trans "You have " %} {{ quiz.time_limit }} {% trans " minute(s) to complete this quiz" %}.</h4>
+{% endif %}
 <p>{{ quiz.description }}</p>
 <p>
   <a href="{% url 'quiz_question' quiz_name=quiz.url %}">
