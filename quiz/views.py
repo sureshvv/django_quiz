@@ -255,11 +255,12 @@ class QuizTake(FormView):
     def final_result_user(self):
         elapsed = datetime.now() - self.sitting.start
         elapsed = int(elapsed.total_seconds() / 60)
+        scoring = list(map(int, self.quiz.score.split(',')))
 
         results = {
             'quiz': self.quiz,
             'score': self.sitting.get_current_score,
-            'max_score': self.sitting.get_max_score,
+            'max_score': self.sitting.get_max_score * scoring[0],
             'percent': self.sitting.get_percent_correct,
             'sitting': self.sitting,
             'previous': self.previous,
