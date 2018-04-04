@@ -11,6 +11,7 @@
   {% if quiz.time_limit > 0 and elapsed >= quiz.time_limit %}
     <div class="alert alert-danger">
       Exceeded maximum allowed {{ quiz.time_limit }} minutes.
+      <a href='#' onclick="window.location.reload(true)">Retake quiz?</a>
     </div>
   {% endif %}
 

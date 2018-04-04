@@ -50,7 +50,7 @@
 {% if progress %}
 <div style="float: right;">
 {% if quiz.time_limit and time_left > 0 %}
-{{ time_left }} minutes left, &nbsp;
+{{ time_left }} minute(s) left, &nbsp;
 {% endif %} 
 {% trans "Question" %} {{ progress.0|add:1 }} {% trans "of" %} {{ progress.1 }}
 </div>

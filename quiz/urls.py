@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.views.decorators.cache import never_cache
 
 from .views import QuizListView, CategoriesListView,\
     ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList,\
@@ -37,6 +38,6 @@ urlpatterns = patterns('',
                            name='quiz_start_page'),
 
                        url(regex=r'^(?P<quiz_name>[\w-]+)/take/$',
-                           view=QuizTake.as_view(),
+                           view=never_cache(QuizTake.as_view()),
                            name='quiz_question'),
 )
