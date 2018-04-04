@@ -534,7 +534,8 @@ class Sitting(models.Model):
 
     @property
     def get_max_score(self):
-        return len(self._question_ids())
+        scoring = list(map(int, self.quiz.score.split(',')))
+        return scoring[0]*len(self._question_ids())
 
     def progress(self):
         """
