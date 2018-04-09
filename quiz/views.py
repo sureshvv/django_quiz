@@ -369,6 +369,7 @@ class QuizTake(FormView):
         elapsed /= 60
 
         results = {
+            'quiz': self.quiz,
             'score': score,
             'max_score': max_score,
             'percent': percent,
