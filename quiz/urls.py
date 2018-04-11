@@ -34,7 +34,7 @@ urlpatterns = patterns('',
                            view=QuizMarkingDetail.as_view(),
                            name='quiz_marking_detail'),
 
-                       url(regex=r'^qb/(?P<quiz>[\d.]+)/$',
+                       url(regex=r'^qb/$',
                            view=QuestionBankView.as_view(),
                            name='question_bank_view'),
 
@@ -46,4 +46,4 @@ urlpatterns = patterns('',
                        url(regex=r'^(?P<quiz_name>[\w-]+)/take/$',
                            view=never_cache(QuizTake.as_view()),
                            name='quiz_question'),
-)
+                       )
