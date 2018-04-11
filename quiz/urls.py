@@ -5,6 +5,8 @@ from .views import QuizListView, CategoriesListView,\
     ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList,\
     QuizMarkingDetail, QuizDetailView, QuizTake
 
+from .qb import QuestionBankView
+
 
 urlpatterns = patterns('',
 
@@ -31,6 +33,10 @@ urlpatterns = patterns('',
                        url(regex=r'^marking/(?P<pk>[\d.]+)/$',
                            view=QuizMarkingDetail.as_view(),
                            name='quiz_marking_detail'),
+
+                       url(regex=r'^qb/(?P<quiz>[\d.]+)/$',
+                           view=QuestionBankView.as_view(),
+                           name='question_bank_view'),
 
                        #  passes variable 'quiz_name' to quiz_take view
                        url(regex=r'^(?P<slug>[\w-]+)/$',

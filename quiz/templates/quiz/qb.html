@@ -1,0 +1,10 @@
+{% extends 'quiz/base.html' %}
+{% block content %}
+    <div>You can take the quiz <a href="/neet/{{ quiz.url }}">here</a></div>
+    {% for q in object_list %}
+        <div>{{ q.content }}</div>
+        {% for ans in q.get_answers %}
+            <div>{{ ans.content }}</div>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
