@@ -1,12 +1,40 @@
 {% extends 'quiz/base.html' %}
+{% load i18n %}
 {% block content %}
-    {% for q in object_list %}
-        <div>You can take the quiz <a href="/neet/{{ q.url }}">here</a></div>
-        {% for q1 in q.get_questions %}
-            <div>{{ q1.content }}</div>
+    {% for quiz in object_list %}
+        <h3>{{ quiz.title }} of Category: {{ quiz.category }}</h3>
+{% if quiz.single_attempt %}
+  <h4>{% trans "You will only get one attempt at this quiz" %}.</h4>
+{% endif %}
+<h4>{% trans "You have to answer " %} {{ quiz.max_questions }} {% trans " questions" %}
+{% if quiz.time_limit > 0 %}
+  {% trans "in " %} {{ quiz.time_limit }} {% trans " minute(s)" %}.
+{% else %}
+    .
+{% endif %}
+        &nbsp; You can take the quiz <a href="/neet/{{ quiz.url }}">here</a></h4>
+<p>&nbsp;</p>
+    <div class="panel-group">
+        {% for q1 in quiz.get_questions %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#kollapse{{forloop.counter}}">
+            {{ q1.content }}
+              </a>
+            </h4>
+          </div>
+          <div id="kollapse{{forloop.counter}}" class="panel-collapse collapse">
+            <div class="panel-body">
             {% for ans in q1.get_answers %}
                 <div>{{ ans.content }}</div>
             {% endfor %}
+            </div>
+            <div class="panel-footer">
+            </div>
+          </div>
+        </div>
         {% endfor %}
+      </div>
     {% endfor %}
 {% endblock %}
