@@ -19,12 +19,12 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a data-toggle="collapse" href="#kollapse{{forloop.counter}}">
+              <a data-toggle="collapse" href="#kollapse{{forloop.parentloop.counter}}-{{forloop.counter}}">
             {{ q1.content }}
               </a>
             </h4>
           </div>
-          <div id="kollapse{{forloop.counter}}" class="panel-collapse collapse">
+          <div id="kollapse{{forloop.parentloop.counter}}-{{forloop.counter}}" class="panel-collapse collapse">
             <div class="panel-body">
             {% for ans in q1.get_answers %}
                 <div>{{ ans.content }}</div>
