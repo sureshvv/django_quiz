@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.views.decorators.cache import never_cache
 
 from .views import QuizListView, CategoriesListView,\
@@ -8,8 +8,7 @@ from .views import QuizListView, CategoriesListView,\
 from .qb import QuestionBankView
 
 
-urlpatterns = patterns('',
-
+urlpatterns = [
                        url(regex=r'^$',
                            view=QuizListView.as_view(),
                            name='quiz_index'),
@@ -46,4 +45,4 @@ urlpatterns = patterns('',
                        url(regex=r'^(?P<quiz_name>[\w-]+)/take/$',
                            view=never_cache(QuizTake.as_view()),
                            name='quiz_question'),
-                       )
+                       ]
