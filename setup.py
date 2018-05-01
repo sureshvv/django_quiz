@@ -28,8 +28,8 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
     install_requires=[
-        'django-model-utils == 2.0.3',
-        'Django >= 1.5.1',
+        'django-model-utils == 3.1.1',
+        'Django >= 1.11.12',
         'Pillow == 2.5.0'
     ],
     test_suite='runtests.runtests'
