@@ -64,7 +64,7 @@
 <p class="lead">{{ question.content }}</p>
 
 {% if question.figure %}
-    <img style="width:100%; height: auto;" src="{{ question.figure.url }}" alt="{{ question.content }}" />
+    <img src="{{ question.figure.url }}" style="width:100%; height: auto;" alt="{{ question.content }}" />
 {% endif %}
 
 <form action="" method="POST">{% csrf_token %}
