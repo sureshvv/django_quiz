@@ -1,17 +1,18 @@
 from __future__ import unicode_literals
+
 import re
 import json
 
+from model_utils.managers import InheritanceManager
+
 from django.db import models
-from django.core.exceptions import ValidationError, ImproperlyConfigured
+from django.conf import settings
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.timezone import now
+from django.utils.translation import ugettext as _
+from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.validators import (MaxValueValidator,
                                     validate_comma_separated_integer_list)
-from django.utils.translation import ugettext as _
-from django.utils.timezone import now
-from django.utils.encoding import python_2_unicode_compatible
-from django.conf import settings
-
-from model_utils.managers import InheritanceManager
 
 
 class CategoryManager(models.Manager):
@@ -50,7 +51,7 @@ class SubCategory(models.Model):
         max_length=250, blank=True, null=True)
 
     category = models.ForeignKey(
-        Category, null=True, blank=True,
+        Category, null=True, blank=True, on_delete=models.CASCADE,
         verbose_name=_("Category"))
 
     objects = CategoryManager()
@@ -80,7 +81,7 @@ class Quiz(models.Model):
         verbose_name=_("user friendly url"))
 
     category = models.ForeignKey(
-        Category, null=True, blank=True,
+        Category, null=True, blank=True, on_delete=models.CASCADE,
         verbose_name=_("Category"))
 
     random_order = models.BooleanField(
@@ -202,7 +203,7 @@ class Progress(models.Model):
     Data stored in csv using the format:
         category, score, possible, category, score, possible, ...
     """
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                 verbose_name=_("User"))
 
     score = models.CharField(
@@ -383,9 +384,9 @@ class Sitting(models.Model):
     with the answer the user gave.
     """
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
 
-    quiz = models.ForeignKey(Quiz, verbose_name=_("Quiz"))
+    quiz = models.ForeignKey(Quiz, verbose_name=_("Quiz"), on_delete=models.CASCADE)
 
     question_order = models.CharField(
         validators=[validate_comma_separated_integer_list],
@@ -566,12 +567,12 @@ class Question(models.Model):
 
     category = models.ForeignKey(Category,
                                  verbose_name=_("Category"),
-                                 blank=True,
+                                 blank=True, on_delete=models.CASCADE,
                                  null=True)
 
     sub_category = models.ForeignKey(SubCategory,
                                      verbose_name=_("Sub-Category"),
-                                     blank=True,
+                                     blank=True, on_delete=models.CASCADE,
                                      null=True)
 
     figure = models.ImageField(upload_to='uploads/%Y/%m/%d',
