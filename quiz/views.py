@@ -143,7 +143,7 @@ class QuizTake(FormView):
         if self.quiz.draft and not request.user.has_perm('quiz.change_quiz'):
             raise PermissionDenied
 
-        self.logged_in_user = self.request.user.is_authenticated()
+        self.logged_in_user = self.request.user.is_authenticated
 
         if self.logged_in_user:
             self.sitting = Sitting.objects.user_sitting(request.user,
@@ -366,7 +366,7 @@ class QuizTake(FormView):
         max_score = len(q_order) * scoring[0]
         percent = int(round((float(score) / max_score) * 100))
         session, session_possible = anon_session_score(self.request.session)
-        if score is 0:
+        if score == 0:
             score = "0"
         elapsed = time.time() - self.request.session['start']
         elapsed /= 60
